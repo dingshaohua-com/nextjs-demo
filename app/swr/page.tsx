@@ -9,7 +9,15 @@ export default function Snapdom() {
   const [selectedCity, setSelectedCity] = useState<string>("北京");
 
   // selectedCity 变化后，useGetWeather 会自动重新执行：SWR 检测到 key 变化后，会自动发起新的请求获取新城市的数据
-  const { data: weather } = useGetWeather({ city: selectedCity });
+  const { data: weather, isLoading } = useGetWeather({ city: selectedCity });
+
+  if(isLoading){
+    return (
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-lg text-gray-600">加载中...</div>
+      </div>
+    );
+  }
 
   if (!weather) {
     return (
