@@ -17,6 +17,9 @@ importers:
       axios:
         specifier: ^1.13.2
         version: 1.13.2
+      json-server-client:
+        specifier: workspace:*
+        version: link:packages/json-server-client
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
@@ -57,9 +60,6 @@ importers:
       eslint-config-next:
         specifier: 16.1.4
         version: 16.1.4(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
-      json-server-client:
-        specifier: workspace:*
-        version: link:packages/json-server-client
       tailwindcss:
         specifier: ^4
         version: 4.1.18
