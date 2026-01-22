@@ -62,7 +62,7 @@ function PaginationVirtual() {
 
   // 虚拟化器 (virtualizer)
   const rowVirtualizer = useVirtualizer({
-    count: DEFAULT_PAGE_SIZE || 0, // 需要虚拟化的总项目数，不分也则是totol，后端要是分页则对应的是pageSize
+    count: allUsers.length, // 需要虚拟化的总项目数
     getScrollElement: () => parentRef.current,
     estimateSize: () => 80, // 每个元素高度
   });
@@ -140,7 +140,16 @@ function PaginationVirtual() {
             })}
 
             {/* 底部触发器：用于判断是否滚动到底部 */}
-            <div ref={ref} className="py-8 flex justify-center">
+            <div
+              ref={ref}
+              style={{
+                position: "absolute",
+                top: `${rowVirtualizer.getTotalSize()}px`,
+                left: 0,
+                width: "100%",
+              }}
+              className="py-8 flex justify-center"
+            >
               {isFetchingNextPage ? (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Loader2 className="animate-spin h-4 w-4" />
