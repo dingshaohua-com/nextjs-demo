@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { getUsersByPagination } from "@/lib/api-client";
 import { getAvatarColor, getGenderStyle, Loading } from "./_helper";
 import {
@@ -17,10 +17,7 @@ const queryClient = new QueryClient();
 // --- 子组件：负责逻辑和渲染 ---
 const DEFAULT_PAGE_SIZE = 8;
 function Pagination() {
-  // 1. 使用 useInView 钩子监控列表底部的占位符
-  const { ref, inView } = useInView();
-
-  // 2. 无限分页查询
+  // 1. 无限分页查询
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: ["pagination-demo-page"],
@@ -40,12 +37,20 @@ function Pagination() {
       },
     });
 
-  // 3. 当底部的 ref 进入视口时，自动触发加载更多
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  // 2. 使用 ref 获取最新状态，避免 onChange 闭包问题
+  const stateRef = useRef({ hasNextPage, isFetchingNextPage });
+  stateRef.current = { hasNextPage, isFetchingNextPage };
+
+  // 3. 使用 useInView 的 onChange 回调，只在进入视口时触发一次
+  const { ref } = useInView({
+    onChange: (inView) => {  // 比使用useEffect监听[inView, hasNextPage, isFetchingNextPage]靠谱
+      // inView 指的是底部触发器ref是否进入视图
+      const { hasNextPage, isFetchingNextPage } = stateRef.current;
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
 
   // 4. 将嵌套的 pages 数据拍平，方便渲染
   const allUsers = data?.pages.flatMap((page) => page.data) ?? [];
