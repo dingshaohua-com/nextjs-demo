@@ -63,7 +63,7 @@ function Pagination() {
         </div>
 
         {/* 虚拟滚动列表 */}
-        <div className="flex-1 overflow-auto p-x-2">
+        <div className="flex-1 overflow-auto p-2">
           {allUsers.map((item) => (
             <div
               key={item.id}
