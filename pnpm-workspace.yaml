@@ -1,5 +1,6 @@
 packages:
-  - .
+  - 'packages/*'  # 如果你的包在 packages/json-server-client
+  - 'apps/*'      # 如果你的前端应用在 apps/nextjs-demo
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver

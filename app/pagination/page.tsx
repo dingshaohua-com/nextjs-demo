@@ -6,14 +6,15 @@ import { useGetUsers } from "@/lib/api-client";
 import {getAvatarColor, getGenderStyle, Loading} from './_helper'
 
 export default function Virtual() {
-  const { data, isLoading } = useGetUsers({});
+  const [pagination, setPagination] = useState({page: 1, pageSize: 25});
+  const { data, isLoading } = useGetUsers({ _page: pagination.page, _per_page: pagination.pageSize });
 
   // 列表的可滚动元素 (scroll element)
   const parentRef = useRef(null);
 
   // 虚拟化器 (virtualizer)
   const rowVirtualizer = useVirtualizer({
-    count: data?.total||0, // 需要虚拟化的总项目数，不分也则是totol，后端要是分页则对应的是pageSize
+    count: pagination.pageSize, // 需要虚拟化的总项目数，不分也则是totol，后端要是分页则对应的是pageSize
     getScrollElement: () => parentRef.current,
     estimateSize: () => 80, // 每个元素高度
   });
@@ -26,7 +27,7 @@ export default function Virtual() {
         {/* 标题栏 */}
         <div className="px-6 py-4 border-b border-slate-100 bg-linear-to-r from-blue-500 to-indigo-600">
           <h2 className="text-xl font-semibold text-white">用户列表</h2>
-          <p className="text-blue-100 text-sm mt-1">共 {data.total || 0} 位用户</p>
+          <p className="text-blue-100 text-sm mt-1">共 {data?.items || 0} 位用户</p>
         </div>
 
         {/* 虚拟滚动列表 */}
