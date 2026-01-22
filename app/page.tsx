@@ -14,7 +14,7 @@ export default function Home() {
           priority
         />
         <div className="mt-2">
-          <div className="font-bold text-2xl">这是一些nextjs的一些Demo页面</div>
+          <div className="font-bold text-2xl">这是一些nextjs的一些Demo页面（<a className="text-pink-400" href="https://github.com/dingshaohua-com/nextjs-demo" target="_blank">点此访问源码</a>）</div>
           <div className="content mt-4 flex flex-col gap-1">
             <Link href="/virtual" className="text-blue-600 hover:underline">
               Virtual 示例页面：虚拟列表
