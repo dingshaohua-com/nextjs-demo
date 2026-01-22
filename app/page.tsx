@@ -22,6 +22,9 @@ export default function Home() {
             <Link href="/pagination" className="text-blue-600 hover:underline">
               Pagination 示例页面：上拉加载下拉刷新
             </Link>
+            <Link href="/pagination" className="text-blue-600 hover:underline">
+              Pagination+Virtual 示例页面：无限加载+虚拟列表
+            </Link>
              <Link href="/swr" className="text-blue-600 hover:underline">
               Swr 示例页面: react优秀的请求库
             </Link>
