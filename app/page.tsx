@@ -28,6 +28,9 @@ export default function Home() {
              <Link href="/swr" className="text-blue-600 hover:underline">
               Swr 示例页面: react优秀的请求库
             </Link>
+            <Link href="/keep-alive" className="text-blue-600 hover:underline">
+              页面缓存: 实现vue的keep-alive感觉
+            </Link>
           </div>
         </div>
       </main>
