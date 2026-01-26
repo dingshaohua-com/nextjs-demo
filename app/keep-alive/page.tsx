@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
+import { useListStore } from "./_store/useListStore"; // 引入你定义的 Store
 
 const users = Array.from({ length: 50 }, (_, i) => ({
   id: i + 1,
@@ -10,10 +11,30 @@ const users = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 export default function KeepAlive() {
-  const [keyword, setKeyword] = useState("");
+  // 1. 从 Store 中提取状态
+  const { query, scrollY, setState } = useListStore();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const filtered = users.filter(
-    (u) => u.name.includes(keyword) || u.email.includes(keyword)
+    (u) => u.name.includes(query) || u.email.includes(query)
   );
+
+  // 2. 恢复滚动位置
+  useLayoutEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollY;
+    }
+  }, []); // 仅挂载时执行一次
+
+  // 3. 记录滚动位置
+  // 在用户点击链接离开页面之前，或者滚动时记录
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      setState((s) => {
+        s.scrollY = scrollContainerRef.current?.scrollTop || 0;
+      });
+    }
+  };
 
   return (
     <div className="h-screen bg-slate-50 flex justify-center items-center">
@@ -22,16 +43,24 @@ export default function KeepAlive() {
           <h2 className="text-xl font-semibold text-white">用户列表</h2>
           <p className="text-blue-100 text-sm mt-1">共 {filtered.length} 位用户</p>
         </div>
+        
         <div className="px-4 py-3 border-b border-slate-100">
           <input
             type="text"
             placeholder="搜索姓名或邮箱..."
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            // 4. 同步搜索词到 Store
+            value={query}
+            onChange={(e) => setState((s) => { s.query = e.target.value; })}
             className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400"
           />
         </div>
-        <div className="flex-1 overflow-auto p-2">
+
+        {/* 5. 绑定 Ref 和 滚动事件 */}
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-auto p-2"
+        >
           {filtered.map((item) => (
             <div
               key={item.id}
